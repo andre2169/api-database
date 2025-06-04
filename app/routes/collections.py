@@ -30,7 +30,7 @@ def create_collection(
         id=generate_uuid(),
         user_id=user.id,
         name=collection.name,
-        parent_id=collection.parent_id,
+        parent_id=collection.parent_id,  # permite criar subcoleções
         created_at=get_current_timestamp(),
         updated_at=get_current_timestamp()
     )
@@ -65,7 +65,7 @@ def list_user_collections(
     user = get_user_by_email(db, user_email)
 
     all_collections = db.query(Collection).filter(Collection.user_id == user.id).all()
-    collection_tree = build_collection_tree(all_collections)
+    collection_tree = build_collection_tree(all_collections)  # Monta árvore hierárquica
     return collection_tree
 
 @router.delete("/collections/{collection_id}", summary="Deleta uma coleção e suas subcoleções")
@@ -76,7 +76,6 @@ def delete_collection(
 ):
     user = get_user_by_email(db, user_email)
 
-    # Busca a coleção pelo ID e valida se pertence ao usuário
     collection = db.query(Collection).filter(
         Collection.id == collection_id,
         Collection.user_id == user.id
@@ -85,19 +84,19 @@ def delete_collection(
     if not collection:
         raise HTTPException(status_code=404, detail="Coleção não encontrada ou não pertence ao usuário.")
 
-    # Função recursiva para excluir a coleção e suas subcoleções
     def delete_recursively(col_id: str):
         subcollections = db.query(Collection).filter(
             Collection.parent_id == col_id,
             Collection.user_id == user.id
         ).all()
         for sub in subcollections:
-            delete_recursively(sub.id)  # chamada recursiva
+            delete_recursively(sub.id)
 
-        # Exclui a própria coleção
+        # Exclui dados vinculados a esta coleção antes de apagar a coleção
+        db.query(Data).filter(Data.collection_id == col_id).delete()
+        # Exclui a coleção
         db.query(Collection).filter(Collection.id == col_id).delete()
 
     delete_recursively(collection_id)
-
     db.commit()
     return {"message": "Coleção e subcoleções excluídas com sucesso."}

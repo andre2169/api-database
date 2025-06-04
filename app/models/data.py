@@ -6,6 +6,7 @@ class Data(Base):
     __tablename__ = "data"
     id = Column(String, primary_key=True, index=True)
     user_id = Column(String, ForeignKey("users.id"), index=True)
+    collection_id = Column(String, ForeignKey("collections.id"), nullable=True)  # FK para coleções e subcoleções
     content = Column(JSON)
     file_key = Column(String, nullable=True)
     data_metadata = Column(JSON, nullable=True)

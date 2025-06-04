@@ -51,7 +51,7 @@ def delete_user_account(
     data_items = db.query(Data).filter(Data.user_id == user_id).all()
     for item in data_items:
         if item.file_key:
-            delete_file(item.file_key)  # remove do S3
+            delete_file(item.file_key)
         db.delete(item)
 
     # 2. Deletar históricos

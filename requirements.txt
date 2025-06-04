@@ -2,7 +2,7 @@ fastapi==0.115.12
 uvicorn==0.34.2
 sqlalchemy==2.0.40
 psycopg2-binary==2.9.10
-python-multipart==0.0.12  # versão compatível
+python-multipart==0.0.12
 pydantic==2.11.4
 python-jose==3.4.0
 passlib==1.7.4
@@ -11,4 +11,4 @@ boto3==1.38.8
 requests==2.32.3
 pandas==2.2.3
 bcrypt==3.2.2
-py-bcrypt==0.4
+#py-bcrypt==0.4

@@ -4,7 +4,7 @@ from typing import Optional, List
 
 class CollectionCreate(BaseModel):
     name: str
-    parent_id: Optional[str] = None 
+    parent_id: Optional[str] = None
 
 class CollectionOut(BaseModel):
     id: str
@@ -16,5 +16,3 @@ class CollectionOut(BaseModel):
 
     class Config:
         orm_mode = True
-
-CollectionOut.model_rebuild()
